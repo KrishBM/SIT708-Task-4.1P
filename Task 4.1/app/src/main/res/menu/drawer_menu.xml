@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_all_tasks"
+            android:icon="@android:drawable/ic_menu_agenda"
+            android:title="@string/all_tasks" />
+        
+        <item
+            android:id="@+id/menu_pending_tasks"
+            android:icon="@android:drawable/ic_menu_today"
+            android:title="@string/pending_tasks" />
+            
+        <item
+            android:id="@+id/menu_completed_tasks"
+            android:icon="@android:drawable/ic_menu_view"
+            android:title="@string/completed_tasks" />
+    </group>
+
+    <item android:title="@string/other">
+        <menu>
+            <item
+                android:id="@+id/menu_settings"
+                android:icon="@android:drawable/ic_menu_manage"
+                android:title="@string/settings" />
+            
+            <item
+                android:id="@+id/menu_about"
+                android:icon="@android:drawable/ic_menu_info_details"
+                android:title="@string/about" />
+        </menu>
+    </item>
+</menu> 
