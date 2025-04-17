@@ -4,77 +4,100 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
-    private Context context;
-    private List<Task> taskList;
-    private OnTaskClickListener listener;
-    private SimpleDateFormat dateFormat;
+    private List<Task> tasks = new ArrayList<>();
+    private final OnTaskListener listener;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
-    public interface OnTaskClickListener {
+    public interface OnTaskListener {
         void onTaskClick(Task task);
+        void onTaskCompleted(Task task, boolean isCompleted);
+        void onDeleteClick(Task task);
     }
 
-    public TaskAdapter(Context context, List<Task> taskList) {
-        this.context = context;
-        this.taskList = taskList;
-        this.dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-        
-        // If the context implements OnTaskClickListener, set it as the listener
-        if (context instanceof OnTaskClickListener) {
-            this.listener = (OnTaskClickListener) context;
-        }
+    public TaskAdapter(OnTaskListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(context)
+        View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.task_item, parent, false);
-        return new TaskViewHolder(itemView);
+        return new TaskViewHolder(itemView, listener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        Task task = taskList.get(position);
-        
-        holder.textViewTitle.setText(task.getTitle());
-        holder.textViewDescription.setText(task.getDescription());
-        holder.textViewDueDate.setText(dateFormat.format(task.getDueDate()));
-
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onTaskClick(task);
-            }
-        });
+        Task currentTask = tasks.get(position);
+        holder.bind(currentTask);
     }
 
     @Override
     public int getItemCount() {
-        return taskList.size();
+        return tasks.size();
     }
 
     public void setTasks(List<Task> tasks) {
-        this.taskList = tasks;
+        this.tasks = new ArrayList<>(tasks);
         notifyDataSetChanged();
     }
 
     static class TaskViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewTitle;
-        TextView textViewDescription;
-        TextView textViewDueDate;
+        private final TextView textViewTitle;
+        private final TextView textViewDescription;
+        private final TextView textViewDueDate;
+        private final CheckBox checkBoxCompleted;
+        private final ImageButton buttonDelete;
+        private final OnTaskListener listener;
+        private Task currentTask;
 
-        TaskViewHolder(View view) {
-            super(view);
-            textViewTitle = view.findViewById(R.id.task_title);
-            textViewDescription = view.findViewById(R.id.task_description);
-            textViewDueDate = view.findViewById(R.id.task_due_date);
+        TaskViewHolder(View itemView, OnTaskListener listener) {
+            super(itemView);
+            this.listener = listener;
+            textViewTitle = itemView.findViewById(R.id.task_title);
+            textViewDescription = itemView.findViewById(R.id.task_description);
+            textViewDueDate = itemView.findViewById(R.id.task_due_date);
+            checkBoxCompleted = itemView.findViewById(R.id.checkbox_completed);
+            buttonDelete = itemView.findViewById(R.id.button_delete);
+
+            itemView.setOnClickListener(v -> {
+                if (listener != null && currentTask != null) {
+                    listener.onTaskClick(currentTask);
+                }
+            });
+
+            buttonDelete.setOnClickListener(v -> {
+                if (listener != null && currentTask != null) {
+                    listener.onDeleteClick(currentTask);
+                }
+            });
+
+            checkBoxCompleted.setOnClickListener(v -> {
+                if (listener != null && currentTask != null) {
+                    listener.onTaskCompleted(currentTask, checkBoxCompleted.isChecked());
+                }
+            });
+        }
+
+        void bind(Task task) {
+            this.currentTask = task;
+            textViewTitle.setText(task.getTitle());
+            textViewDescription.setText(task.getDescription());
+            textViewDueDate.setText(DATE_FORMAT.format(task.getDueDate()));
+            
+            checkBoxCompleted.setOnCheckedChangeListener(null);
+            checkBoxCompleted.setChecked(task.isCompleted());
         }
     }
 } 

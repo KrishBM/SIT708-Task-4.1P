@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="176dp"
-    android:background="@color/design_default_color_primary"
+    android:background="@color/purple_500"
     android:gravity="bottom"
     android:orientation="vertical"
     android:padding="16dp"
@@ -24,6 +24,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Organize your tasks efficiently" />
+        android:text="Manage your tasks efficiently" />
 
 </LinearLayout> 

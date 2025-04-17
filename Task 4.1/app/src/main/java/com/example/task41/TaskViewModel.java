@@ -9,10 +9,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class TaskViewModel extends AndroidViewModel {
-    private TaskRepository repository;
-    private LiveData<List<Task>> allTasks;
-    private LiveData<List<Task>> pendingTasks;
-    private LiveData<List<Task>> completedTasks;
+    private final TaskRepository repository;
+    private final LiveData<List<Task>> allTasks;
+    private final LiveData<List<Task>> pendingTasks;
+    private final LiveData<List<Task>> completedTasks;
     private ExecutorService executorService;
 
     public TaskViewModel(Application application) {

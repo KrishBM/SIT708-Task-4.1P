@@ -23,10 +23,10 @@ public interface TaskDao {
     @Query("SELECT * FROM tasks ORDER BY dueDate ASC")
     LiveData<List<Task>> getAllTasks();
 
-    @Query("SELECT * FROM tasks WHERE isCompleted = 0 ORDER BY dueDate ASC")
+    @Query("SELECT * FROM tasks WHERE completed = 0 ORDER BY dueDate ASC")
     LiveData<List<Task>> getPendingTasks();
 
-    @Query("SELECT * FROM tasks WHERE isCompleted = 1 ORDER BY dueDate ASC")
+    @Query("SELECT * FROM tasks WHERE completed = 1 ORDER BY dueDate ASC")
     LiveData<List<Task>> getCompletedTasks();
 
     @Query("SELECT * FROM tasks WHERE id = :taskId")

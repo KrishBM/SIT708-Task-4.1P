@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Entity(tableName = "tasks")
 public class Task {
@@ -17,7 +18,7 @@ public class Task {
     @TypeConverters(DateConverter.class)
     private Date dueDate;
     
-    private boolean isCompleted;
+    private boolean completed;
 
     public Task() {
     }
@@ -26,7 +27,7 @@ public class Task {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
-        this.isCompleted = false;
+        this.completed = false;
     }
 
     // Getters and Setters
@@ -63,10 +64,23 @@ public class Task {
     }
 
     public boolean isCompleted() {
-        return isCompleted;
+        return completed;
     }
 
     public void setCompleted(boolean completed) {
-        isCompleted = completed;
+        this.completed = completed;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 } 
